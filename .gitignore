@@ -30,3 +30,18 @@
 *.exe
 *.out
 *.app
+
+# Assembler generated files
+*.s
+*.S
+*.asm
+
+# test files
+*.hy
+
+# build files
+build/
+out/
+
+# CMake files
+CMakeFiles/
