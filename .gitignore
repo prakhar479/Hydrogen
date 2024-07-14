@@ -40,8 +40,12 @@
 *.hy
 
 # build files
+install/
 build/
 out/
 
 # CMake files
 CMakeFiles/
+
+# Visual Studio files
+.vscode
