@@ -12,29 +12,30 @@
  */
 enum class TokenType
 {
-    _exit,         ///< Represents the "exit" keyword.
-    _int,          ///< Represents an integer literal.
-    _EOS,          ///< Represents the end of a statement.
-    _open_paren,   ///< Represents an opening parenthesis '('.
-    _close_paren,  ///< Represents a closing parenthesis ')'.
-    _open_brace,   ///< Represents an opening curly brace '{'.
-    _close_brace,  ///< Represents a closing curly brace '}'.
-    _multiply,     ///< Represents the multiplication operator '*'.
-    _percent,      ///< Represents the modulo operator '%'.
-    _plus,         ///< Represents the addition operator '+'.
-    _minus,        ///< Represents the subtraction operator '-'.
-    _equal,        ///< Represents the equality operator '=='.
-    _less_than,    ///< Represents the less than operator '<'.
-    _greater_than, ///< Represents the greater than operator '>'.
-    _assign,       ///< Represents the assignment operator '='.
-    _identifier,   ///< Represents an identifier (variable or function name).
-    _for,          ///< Represents the "for" keyword for loop.
-    _if,           ///< Represents the "if" keyword for conditional statement.  
-    _else,         ///< Represents the "else" keyword for conditional statement.
-    _let,          ///< Represents the "let" keyword for variable declaration.
-    _define,       ///< Represents the "define" keyword for function definition.
-    _while,        ///< Represents the "while" keyword for while loop.
-    _ERROR         ///< Represents an invalid or unrecognized token.
+    _exit,         // Represents the "exit" keyword.
+    _int,          // Represents an integer literal.
+    _EOS,          // Represents the end of a statement.
+    _open_paren,   // Represents an opening parenthesis '('.
+    _close_paren,  // Represents a closing parenthesis ')'.
+    _open_brace,   // Represents an opening curly brace '{'.
+    _close_brace,  // Represents a closing curly brace '}'.
+    _multiply,     // Represents the multiplication operator '*'.
+    _percent,      // Represents the modulo operator '%'.
+    _plus,         // Represents the addition operator '+'.
+    _minus,        // Represents the subtraction operator '-'.
+    _equal,        // Represents the equality operator '=='.
+    _less_than,    // Represents the less than operator '<'.
+    _greater_than, // Represents the greater than operator '>'.
+    _assign,       // Represents the assignment operator '='.
+    _identifier,   // Represents an identifier (variable or function name).
+    _for,          // Represents the "for" keyword for loop.
+    _if,           // Represents the "if" keyword for conditional statement.
+    _else,         // Represents the "else" keyword for conditional statement.
+    _let,          // Represents the "let" keyword for variable declaration.
+    _define,       // Represents the "define" keyword for function definition.
+    _ret,          // Represents the "ret" keyword for return statement.
+    _while,        // Represents the "while" keyword for while loop.
+    _ERROR         // Represents an invalid or unrecognized token.
 };
 
 /**
@@ -90,6 +91,8 @@ static std::string tokenTypeToString(TokenType type)
         return "let";
     case TokenType::_define:
         return "define";
+    case TokenType::_ret:
+        return "return";
     case TokenType::_while:
         return "while";
     default:
@@ -143,6 +146,18 @@ public:
                     ++m_pos;
                 }
             }
+            
+            // Handle multi-line comments
+            if ( c == '/' && m_src[m_pos] == '*')
+            {
+                // Skip until the end of the comment
+                while (m_pos < m_src.size() && !(m_src[m_pos] == '*' && m_src[m_pos + 1] == '/'))
+                {
+                    ++m_pos;
+                }
+                m_pos += 2; ///< Skip the closing '*/' characters
+            }
+            
             // Handle whitespace or end of statement (semicolon)
             else if (std::isspace(c) || c == ';')
             {
@@ -287,6 +302,23 @@ public:
         return tokens;
     }
 
+    /**
+     * @brief Prints the tokens to the standard output.
+     **/
+    void printTokens(std::vector<Token> tokens)
+    {
+        std::cout << "Total Tokens: " << tokens.size() << std::endl;
+        for (const Token &token : tokens)
+        {
+            std::cout << "Token Type: " << tokenTypeToString(token.type);
+            if (token.value.has_value())
+            {
+                std::cout << ", Value: " << token.value.value();
+            }
+            std::cout << "," << std::endl;
+        }
+    }
+
 private:
     /**
      * @brief Parses a buffer string into a Token.
@@ -382,6 +414,12 @@ private:
         case 'i':
             if (buffer == "if")
                 type = TokenType::_if;
+            else
+                type = TokenType::_identifier;
+            break;
+        case 'r':
+            if (buffer == "return")
+                type = TokenType::_ret;
             else
                 type = TokenType::_identifier;
             break;

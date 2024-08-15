@@ -35,16 +35,7 @@ int main(int argc, char *argv[])
 
     Tokenizer tokenizer(file_content);
     vector<Token> tokens = tokenizer.tokenize();
-    for (const Token &token : tokens)
-    {
-        cout << "Token: ";
-        cout << tokenTypeToString(token.type);
-        if (token.value.has_value())
-        {
-            cout << " " << token.value.value();
-        }
-        cout << endl;
-    }
+    tokenizer.printTokens(tokens);
 
     cout << "Parsing Tokens ..." << endl;
     Parser parser(std::move(tokens));
