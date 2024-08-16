@@ -45,37 +45,24 @@ int main(int argc, char *argv[])
         cerr << "Error: Invalid syntax" << endl;
         exit(EXIT_FAILURE);
     }
-    cout << "Parsing Tokens Done" << endl;  
+    cout << "Parsing Tokens Done" << endl;
     cout << string(50, '*') << endl;
     cout << "Parse Tree: " << endl;
     cout << parser.visualize(*tree) << endl;
 
-    // if (!tree.has_value())
-    // {
-    //     cerr << "Error: Invalid syntax" << endl;
-    //     exit(EXIT_FAILURE);
-    // }
-    // cout << "Generating assembly code..." << endl;
+    cout << "Generating assembly code..." << endl;
 
-    // Generator generator(tree.value());
-    // string asm_code = generator.generate();
-    // // string asm_code = tok_to_asm(tokens);
-    // cout << "Generated assembly code" << endl;
-    // cout << string(50, '*') << endl;
+    Generator generator(std::move(*tree));
+    string asm_code = generator.generate();
+    cout << "Generated assembly code" << endl;
+    cout << string(50, '*') << endl;
 
-    // {
-    //     fstream file("out.asm", ios::out);
-    //     cout << "Writing assembly code to file..." << endl;
-    //     file << asm_code;
-    // }
-    // cout << "Assembly code written to file" << endl;
-    // cout << string(50, '*') << endl;
-
-    // cout << "Compiling assembly code..." << endl;
-    // system("nasm -f elf64 out.asm -o out.o");
-    // system("ld out.o -o a.out");
-    // cout << "Compiled assembly code" << endl;
-    // cout << string(50, '*') << endl;
-
+    {
+        fstream file("out.asm", ios::out);
+        cout << "Writing assembly code to file..." << endl;
+        file << asm_code;
+    }
+    cout << "Assembly code written to file" << endl;
+    cout << string(50, '*') << endl;
     exit(EXIT_SUCCESS);
 }
