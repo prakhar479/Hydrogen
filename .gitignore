@@ -36,6 +36,11 @@
 *.S
 *.asm
 
+#compiled files
+test
+hello
+hydrogen
+
 # test files
 *.hy
 
