@@ -273,7 +273,12 @@ public:
         auto program = std::make_unique<node::Program>();
         while (m_pos < m_tokens.size())
         {
-            if (auto stmt = parseStatement())
+            if (m_tokens[m_pos].type == TokenType::_ERROR)
+            {
+                std::cerr << "Warning: Ignoring invalid token at position " << m_pos << std::endl;
+                m_pos++;
+            }
+            else if (auto stmt = parseStatement())
             {
                 program->statements.push_back(std::move(stmt));
             }
@@ -603,8 +608,8 @@ private:
         return std::runtime_error(errorMsg.str());
     }
 
-    std::vector<Token> m_tokens;                    // Vector of tokens to be parsed
-    size_t m_pos;                                   // Current position in the token vector
-    std::unordered_set<std::string> m_variables;    // Set of variable names
-    std::unordered_set<std::string> m_functions;    // Set of function names
+    std::vector<Token> m_tokens;                 // Vector of tokens to be parsed
+    size_t m_pos;                                // Current position in the token vector
+    std::unordered_set<std::string> m_variables; // Set of variable names
+    std::unordered_set<std::string> m_functions; // Set of function names
 };
